@@ -5,12 +5,14 @@ import multiprocessing as mp
 import itertools
 import functools
 
+from wordgen.data import finnish, english, german, finnish_hyp
+
 allowed = re.compile("^[a-zA-ZäöüÄÖÜ]+$")
 vowels = re.compile("[aeiouäöüy]")
 
 
-dicts = [pyphen.Pyphen(lang="de_de"), pyphen.Pyphen(lang="en_en") , pyphen.Pyphen(filename="../data/hyph_fi_FI.dic")]
-words = [Path(p).read_text().splitlines() for p in ["german.txt", "english.txt", "finnish.txt"]]
+dicts = [pyphen.Pyphen(lang="de_de"), pyphen.Pyphen(lang="en_en") , pyphen.Pyphen(filename=finnish_hyp)]
+words = [Path(p).read_text().splitlines() for p in [german, english, finnish]]
 
 def get_syllables(wordlist: list[str], splitter: pyphen.Pyphen) -> set[str]:
     syllables = set()
@@ -30,5 +32,5 @@ with mp.Pool() as pool:
         for new_syllables in sets:
             syllables |= new_syllables
 
-Path("../../../syllables.txt").write_text("\n".join(list(syllables)))
+Path("syllables.txt").write_text("\n".join(list(syllables)))
 

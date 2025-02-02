@@ -1,16 +1,16 @@
 import itertools
 import random
-from collections import deque, defaultdict
-from itertools import islice
 from pathlib import Path
 import multiprocessing as mp
 
 import numpy as np
 from tqdm.auto import tqdm
-import random
+
+from wordgen.data import german, english, finnish
+
 N = 3
 
-corpora = [Path(p).read_text().splitlines() for p in ["data/german.txt", "data/english.txt", "data/finnish.txt"]]
+corpora = [Path(p).read_text().splitlines() for p in [german, english, finnish]]
 for corpus in corpora:
     random.shuffle(corpus)
 
