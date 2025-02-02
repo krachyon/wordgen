@@ -4,8 +4,6 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
-    "ipython>=8.32.0",
-    "nltk>=3.9.1",
     "numpy>=2.2.2",
     "pyphen>=0.17.2",
     "tqdm>=4.67.1",
@@ -18,4 +16,6 @@ build-backend = "setuptools.build_meta"
 dev = [
     "mypy>=1.14.1",
     "ruff>=0.9.4",
+    "types-tqdm>=4.67.0.20241221",
+    "ipython>=8.32.0",
 ]

@@ -2,21 +2,28 @@ import pickle
 from pathlib import Path
 import random
 
+import numpy as np
+
 from wordgen.data import german, english, finnish
 from wordgen.markov_singlechar.extract import get_transitions, get_corpora_string
 from wordgen.markov_singlechar.predict import predict_n, PredictionParams
 
+# constants to tweak
 MAX_WINDOW = 5
-ALPHABET = list("abcdefghijklmnopqrstuvwxyzäöüß ")
+ALPHABET = list("abcdefghijklmnopqrstuvwxyzäöüß ") # everything not mentioned will be deleted
 TRANSITIONS_CACHE = Path("transition_dict.pkl")
+DICTIONARIES = [german, english, finnish]
 rng = random.SystemRandom()
+# How much weight to give the preceding 1, 2 ,3, ... characters
+distribution_weights = np.array([1.,0.02,0.03,0.01,0.01])
+N = 5000
 
 if __name__ == "__main__":
     if TRANSITIONS_CACHE.exists():
         with TRANSITIONS_CACHE.open("rb") as f:
             transitions = pickle.load(f)
     else:
-        corpus = get_corpora_string(german, english, finnish, alphabet=ALPHABET)
+        corpus = get_corpora_string(*DICTIONARIES, alphabet=ALPHABET)
         transitions = get_transitions(corpus, ALPHABET, MAX_WINDOW)
         with TRANSITIONS_CACHE.open("wb") as f:
             pickle.dump(dict(transitions), f)
@@ -24,8 +31,12 @@ if __name__ == "__main__":
     initial = rng.choices(ALPHABET, k=MAX_WINDOW)
     # initial = list("hello")
 
-    filled = predict_n(initial, n=5000, params=PredictionParams(
-        rng=rng, transitions=transitions, alphabet=ALPHABET, max_window=MAX_WINDOW)
-                       )
+    filled = predict_n(initial, n=N, params=PredictionParams(
+        rng=rng,
+        transitions=transitions,
+        alphabet=ALPHABET,
+        max_window=MAX_WINDOW,
+        distribution_weights=distribution_weights
+    ))
 
     print("".join(filled).replace(" ", "\n"))
