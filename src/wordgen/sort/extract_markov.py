@@ -6,11 +6,11 @@ import multiprocessing as mp
 import numpy as np
 from tqdm.auto import tqdm
 
-from wordgen.data import german, english, finnish
+from wordgen.data import german_words, english_words, finnish_words
 
 N = 3
 
-corpora = [Path(p).read_text().splitlines() for p in [german, english, finnish]]
+corpora = [Path(p).read_text().splitlines() for p in [german_words, english_words, finnish_words]]
 for corpus in corpora:
     random.shuffle(corpus)
 

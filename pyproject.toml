@@ -21,3 +21,6 @@ dev = [
     "viztracer>=1.0.1",
     "yappi>=1.6.10",
 ]
+
+[tool.mypy]
+ignore_missing_imports = true
