@@ -1,12 +1,11 @@
 import pickle
+import textwrap
 from pathlib import Path
 import random
 
 import numpy as np
 
-from wordgen.data import german, english, finnish
-from wordgen.markov_singlechar.extract import get_transitions, get_corpora_string
-from wordgen.markov_singlechar.predict import predict_n, PredictionParams
+from wordgen.data import deu_mixed,nld_mixed,eng_wik, fin_wiki
 from wordgen.markov_singlechar.extract import get_transition_distributions_multi, get_corpora_string
 from wordgen.markov_singlechar.predict import PredictionParams, predict_n
 
@@ -14,10 +13,11 @@ from wordgen.markov_singlechar.predict import PredictionParams, predict_n
 MAX_WINDOW = 5
 ALPHABET = list("abcdefghijklmnopqrstuvwxyzäöüß ") # everything not mentioned will be deleted
 TRANSITIONS_CACHE = Path("transition_dict.pkl")
-DICTIONARIES = [german, english, finnish]
+DICTIONARIES = [deu_mixed,nld_mixed,eng_wik,fin_wiki]
 rng = random.SystemRandom()
 # How much weight to give the preceding 1, 2 ,3, ... characters
-distribution_weights = np.array([1.,0.02,0.03,0.01,0.01])
+distribution_weights = np.array([0.1,0.4,1.,0.8,0.3
+                                 ])
 N = 5000
 
 if __name__ == "__main__":
@@ -41,4 +41,4 @@ if __name__ == "__main__":
         distribution_weights=distribution_weights
     ))
 
-    print("".join(filled).replace(" ", "\n"))
+    print("\n".join(textwrap.wrap("".join(filled), width=100)))

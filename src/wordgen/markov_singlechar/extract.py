@@ -38,6 +38,11 @@ def get_transition_distributions(corpus: str, alphabet: list[str], max_window: i
 
     return {key: dist.astype(np.float32)/np.float32(np.sum(dist)) for key, dist in distributions.items()}
 
+def aggregate_distributions(partial_distributions: list[TransitionsT], state: str):
+    return np.mean(
+        [distribution[state] for distribution in partial_distributions if state in distribution],
+        axis=0)
+
 def get_transition_distributions_multi(corpus: str, alphabet: list[str], max_window: int) -> TransitionsT:
 
     batch_length =  len(corpus)//mp.cpu_count()//2
@@ -49,9 +54,8 @@ def get_transition_distributions_multi(corpus: str, alphabet: list[str], max_win
 
     distributions = dict()
     all_states = set(key for partial_transitions in results for key in partial_transitions.keys())
+
     for state in tqdm(all_states):
-        distributions[state] = np.mean(
-            [partial_transitions[state] for partial_transitions in results if state in partial_transitions],
-            axis=0)
+        distributions[state] = aggregate_distributions(results, state)
 
     return distributions
