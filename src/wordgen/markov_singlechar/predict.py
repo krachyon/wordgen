@@ -5,6 +5,7 @@ import dataclasses
 
 from wordgen.markov_singlechar.extract import TransitionsT
 
+
 @dataclasses.dataclass
 class PredictionParams:
     transitions: TransitionsT
@@ -16,25 +17,21 @@ class PredictionParams:
         if len(self.distribution_weights) != self.max_window:
             raise ValueError(f"Max weights must have {self.max_window=} elements")
 
+
 def predict_n(chars: list[str], n: int, params: PredictionParams) -> list[str]:
-    key_order = sorted(params.alphabet)
 
     for _iter in trange(n):
         distributions = []
         for idx in range(-1, -1-params.max_window, -1):
             chunk = "".join(chars[idx:])
             if chunk in params.transitions:
-                transition = params.transitions[chunk]
-                distribution = np.asarray([transition[key] for key in key_order], dtype=np.float64)
-                #distribution = np.asarray(list(transitions[chunk].values()), dtype=np.float64)
-                distribution /= distribution.sum()
-                distributions.append(distribution)
+                distributions.append(params.transitions[chunk])
             else:
                 distributions.append(np.zeros(len(params.alphabet), dtype=np.float64))
 
         distribution = np.average(distributions, axis=0, weights=params.distribution_weights)
         if np.sum(distribution) == 0:
             distribution = np.ones(len(params.alphabet), dtype=np.float64)
-        chars.append(params.rng.choices(key_order, weights=distribution, k=1)[0])
+        chars.append(params.rng.choices(params.alphabet, weights=distribution, k=1)[0])
     return chars
 

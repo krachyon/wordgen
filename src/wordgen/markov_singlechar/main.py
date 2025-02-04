@@ -7,6 +7,8 @@ import numpy as np
 from wordgen.data import german, english, finnish
 from wordgen.markov_singlechar.extract import get_transitions, get_corpora_string
 from wordgen.markov_singlechar.predict import predict_n, PredictionParams
+from wordgen.markov_singlechar.extract import get_transition_distributions_multi, get_corpora_string
+from wordgen.markov_singlechar.predict import PredictionParams, predict_n
 
 # constants to tweak
 MAX_WINDOW = 5
@@ -24,7 +26,7 @@ if __name__ == "__main__":
             transitions = pickle.load(f)
     else:
         corpus = get_corpora_string(*DICTIONARIES, alphabet=ALPHABET)
-        transitions = get_transitions(corpus, ALPHABET, MAX_WINDOW)
+        transitions = get_transition_distributions_multi(corpus, ALPHABET, MAX_WINDOW)
         with TRANSITIONS_CACHE.open("wb") as f:
             pickle.dump(dict(transitions), f)
 
