@@ -8,3 +8,6 @@ deu_mixed = Path(__file__).parent/"deu_mixed.txt"
 fin_wiki = Path(__file__).parent/"fin_wiki.txt"
 nld_mixed = Path(__file__).parent/"nld_mixed.txt"
 finnish_hyp = Path(__file__).parent/"hyph_fi_FI.dic"
+
+def all_text() -> list[Path]:
+    return list(Path(__file__).parent.glob("*.txt"))
