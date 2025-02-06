@@ -5,7 +5,7 @@ from diskcache import Cache
 import numpy as np
 
 from wordgen import CACHE_DIR
-from wordgen.data import deu_mixed, nld_mixed, eng_wik, fin_wiki
+from wordgen.data import deu_mixed, eng_wik, fin_wiki
 from wordgen.markov_singlechar.extract import get_transition_distributions_multi, get_corpora_string, TransitionsT
 from wordgen.markov_singlechar.predict import PredictionParams, predict_n
 
